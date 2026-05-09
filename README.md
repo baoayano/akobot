@@ -61,7 +61,7 @@ Xem [src/commands/utility/help.ts](src/commands/utility/help.ts) để xem toàn
 ### Lệnh tiện ích
 - `/help` hoặc `akohelp` - Hiển thị danh sách lệnh
 - `/ping` hoặc `akoping` - Kiểm tra độ trễ bot
-- `/level` hoặc `akole vel` - Xem cấp độ của bạn
+- `/level` hoặc `akolevel` - Xem cấp độ của bạn
 
 ## Thêm command mới
 

@@ -8,7 +8,9 @@ export async function connectMongo(uri?: string) {
     throw new Error('MONGO_URI not provided. Set MONGO_URI in environment or config.');
   }
 
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, {
+    dbName: process.env.MONGO_DB ?? 'akobot',
+  });
 
   mongoose.connection.on('connected', () => {
     console.log('MongoDB connected');
