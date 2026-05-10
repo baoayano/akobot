@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, Message } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import type { BotClient, CommandContext } from '../../types.js';
 import { formatEmojis } from '../../utils/emoji.js';
 import { getData } from '../../utils/user.js';
@@ -6,7 +6,12 @@ import { formatNumber, discordTimestamp } from '../../utils/number.js';
 import { coinflip } from '../../utils/fun.js';
 import { processLevelIncrease } from '../../events/increaseLevel.js';
 
-const cooldown = new Map<string, number>();
+interface CooldownData {
+    expiresAt: number;
+    messageId: string | null;
+}
+
+const cooldown = new Map<string, CooldownData>();
 
 export default {
     data: new SlashCommandBuilder()
@@ -44,13 +49,16 @@ export default {
         const userId = context.member.user.id;
 
         if (cooldown.has(userId)) {
-            const timeFormat = discordTimestamp(cooldown.get(userId), "R");
+            const userCooldown = cooldown.get(userId);
+            if (!userCooldown || userCooldown.messageId) return;
+            const timeFormat = discordTimestamp(userCooldown.expiresAt, "R");
             const msgCooldown = await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan đang trong thời gian chờ **${timeFormat}**, vui lòng đợi một chút rồi thử lại nhé **>.<**`);
-            setTimeout(() => msgCooldown.delete(), cooldown.get(userId)! - Date.now()); // xóa tin nhắn sau khi thời gian chờ kết thúc
+            userCooldown.messageId = msgCooldown.id; // lưu messageId để có thể xóa sau
+            setTimeout(() => msgCooldown.delete(), userCooldown.expiresAt - Date.now()); // xóa tin nhắn sau khi thời gian chờ kết thúc
             return;
         }
 
-        cooldown.set(userId, Date.now() + 10000); // đặt cooldown 10 giây
+        cooldown.set(userId, { expiresAt: Date.now() + 10000, messageId: null }); // đặt cooldown 10 giây
         setTimeout(() => cooldown.delete(userId), 10000); // cooldown 10 giây
 
         const username = context.member.user.username;
@@ -93,7 +101,7 @@ export default {
         await new Promise(resolve => setTimeout(resolve, [1000, 1500, 2000, 2500, 3000][Math.floor(Math.random() * 5)]));
 
         // coin flip tùy vào số tiền cược
-        const { result, win, jackpotWin } = coinflip(side, amount);
+        const { result, win, jackpotWin } = coinflip(side, amount, userData.pray_luck ?? 0);
 
         if (win) {
             const winCoins = amount * 2;

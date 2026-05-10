@@ -11,7 +11,8 @@ export function getWinRate(bet: number): number {
 
 export function coinflip(
   choice: string,
-  bet: number
+  bet: number,
+  luckPoint: number = 0
 ) {
   choice = choice.toLowerCase();
 
@@ -32,6 +33,13 @@ export function coinflip(
       Math.log10(bet + 1),
       1.32
     ) * 0.0052;
+
+  // bonus từ luck point
+  // scale mềm để tránh quá OP
+  const luckBonus =
+    Math.log10(luckPoint + 1) * 0.012;
+
+  jackpotChance += luckBonus;
 
   // max 15%
   jackpotChance = Math.min(
@@ -58,6 +66,8 @@ export function coinflip(
     win: result === choice,
     winRate,
     jackpotWin,
-    jackpotChance
+    jackpotChance,
+    luckPoint,
+    luckBonus
   };
 }

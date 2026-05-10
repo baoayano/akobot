@@ -22,15 +22,15 @@ export default {
       },
       {
         title: `${emojis[3]} Lệnh giải trí`,
-        commands: [ "coinflip" ]
+        commands: [ "coinflip", "pray" ]
       },
       {
         title: `${emojis[4]} Lệnh xã hội`,
-        commands: [ "level" ]
+        commands: [ "level", "avatar" ]
       },
       {
         title: `${emojis[5]} Lệnh biểu cảm`,
-        commands: [ "kiss" ]
+        commands: [ "kiss", "pat" ]
       },
       {
         title: `${emojis[2]} Lệnh tiện ích`,

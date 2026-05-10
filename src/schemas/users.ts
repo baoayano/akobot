@@ -8,6 +8,7 @@ export interface IUser {
   rank: string;
   exp: number;
   lastDaily: Date | null;
+  pray_luck: number;
 }
 
 const UserSchema = new mongoose.Schema<IUser>({
@@ -18,6 +19,7 @@ const UserSchema = new mongoose.Schema<IUser>({
   rank: { type: String, required: true, default: 'Bronze' },
   exp: { type: Number, required: true, default: 0 },
   lastDaily: { type: Date, default: null },
+  pray_luck: { type: Number, required: true, default: 0 },
 }, { timestamps: true });
 
 export const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);

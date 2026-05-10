@@ -33,6 +33,7 @@ export async function getData(userId: string) {
         rank: user.rank,
         exp: user.exp,
         lastDaily: user.lastDaily,
+        pray_luck: user.pray_luck,
         user
     };
 }
