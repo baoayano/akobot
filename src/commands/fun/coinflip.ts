@@ -82,7 +82,6 @@ export default {
         }
 
         const msg = await context.reply(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${emojis[2]}`);
-        await processLevelIncrease(context, _client, true);
 
         // sleep 1-3 seconds
         await new Promise(resolve => setTimeout(resolve, [1000, 1500, 2000, 2500, 3000][Math.floor(Math.random() * 5)]));
@@ -107,5 +106,7 @@ export default {
 
             await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thua mất rồi! Đừng buồn nhé >.<`);
         }
+
+        await processLevelIncrease(context, _client, true);
     }
 };

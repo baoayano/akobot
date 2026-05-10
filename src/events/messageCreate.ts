@@ -2,7 +2,7 @@ import { Events, Message } from 'discord.js';
 import type { BotClient } from '../types.js';
 import { userExists } from '../utils/user.js';
 import { showRegistrationEmbed } from './registration.js';
-import increaseLevel from './increaseLevel.js';
+import { getServerConfig } from '../utils/servers.js';
 
 export default {
   name: Events.MessageCreate,
@@ -12,12 +12,18 @@ export default {
     }
 
     const prefix = client.prefix ?? 'ako';
+    const serverConfig = await getServerConfig(message.guild?.id ?? '');
+    const usedPrefix = serverConfig?.prefix || prefix;
+    let prefixToUse = prefix;
 
     if (!message.content.toLowerCase().startsWith(prefix)) {
-      return;
+      if (!message.content.toLowerCase().startsWith(usedPrefix)) {
+        return;
+      }
+      prefixToUse = usedPrefix;
     }
 
-    const raw = message.content.slice(prefix.length).trim();
+    const raw = message.content.slice(prefixToUse.length).trim();
 
     if (!raw) {
       return;

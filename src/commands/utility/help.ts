@@ -11,7 +11,8 @@ export default {
       { id: '1495645888121667706', name: 'Juvia_shook' },
       { id: '1502589246047780935', name: 'money', animated: true },
       { id: '1411224061991845959', name: 'emojigg_Aww' },
-      { id: '1411224000444498023', name: 'Happy', animated: true }
+      { id: '1411224000444498023', name: 'Happy', animated: true },
+      { id: '1411194437824151573', name: 'marisa_buri_fast', animated: true }
     ]);
     const listCommands = [
       {
@@ -23,8 +24,12 @@ export default {
         commands: [ "coinflip" ]
       },
       {
+        title: `${emojis[4]} Lệnh xã hội`,
+        commands: [ "level" ]
+      },
+      {
         title: `${emojis[2]} Lệnh tiện ích`,
-        commands: [ "help", "ping", "level" ]
+        commands: [ "help", "ping", "prefix" ]
       }
     ]
 
