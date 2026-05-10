@@ -1,9 +1,10 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, Message } from 'discord.js';
 import type { BotClient, CommandContext } from '../../types.js';
 import { formatEmojis } from '../../utils/emoji.js';
 import { getData } from '../../utils/user.js';
 import { formatNumber, discordTimestamp } from '../../utils/number.js';
 import { coinflip } from '../../utils/fun.js';
+import { processLevelIncrease } from '../../events/increaseLevel.js';
 
 const cooldown = new Map<string, number>();
 
@@ -81,6 +82,7 @@ export default {
         }
 
         const msg = await context.reply(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${emojis[2]}`);
+        await processLevelIncrease(context, _client, true);
 
         // sleep 1-3 seconds
         await new Promise(resolve => setTimeout(resolve, [1000, 1500, 2000, 2500, 3000][Math.floor(Math.random() * 5)]));
