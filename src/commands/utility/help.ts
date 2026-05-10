@@ -12,12 +12,13 @@ export default {
       { id: '1502589246047780935', name: 'money', animated: true },
       { id: '1411224061991845959', name: 'emojigg_Aww' },
       { id: '1411224000444498023', name: 'Happy', animated: true },
-      { id: '1411194437824151573', name: 'marisa_buri_fast', animated: true }
+      { id: '1411194437824151573', name: 'marisa_buri_fast', animated: true },
+      { id: '1411223948993233002', name: 'scared', animated: true }
     ]);
     const listCommands = [
       {
         title: `${emojis[1]} Lệnh tài chính`,
-        commands: [ "cash", "ruby", "give", "daily" ]
+        commands: [ "cash", "ruby", "give", "daily", "exchange" ]
       },
       {
         title: `${emojis[3]} Lệnh giải trí`,
@@ -26,6 +27,10 @@ export default {
       {
         title: `${emojis[4]} Lệnh xã hội`,
         commands: [ "level" ]
+      },
+      {
+        title: `${emojis[5]} Lệnh biểu cảm`,
+        commands: [ "kiss" ]
       },
       {
         title: `${emojis[2]} Lệnh tiện ích`,

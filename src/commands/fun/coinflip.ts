@@ -14,9 +14,9 @@ export default {
         .setDescription('Đoán mặt của đồng xu (ngửa hoặc sấp).')
         .addNumberOption(option =>
             option.setName('amount')
-                .setDescription('Số xu bạn muốn đặt cược (tối thiểu 1 xu).')
+                .setDescription('Số xu bạn muốn đặt cược (nếu đặt là 0, sẽ đặt cược toàn bộ xu).')
                 .setRequired(true)
-                .setMinValue(1)
+                .setMinValue(0)
         )
         .addStringOption(option =>
             option.setName('side')
@@ -65,14 +65,20 @@ export default {
         if (('options' in context) && context.options) {
             amount = context.options.getNumber('amount', true);
             side = context.options.getString('side') || 'heads';
+
+            if (amount === 0) {
+                amount = userData.cash > 1000000 ? 1000000 : userData.cash;
+            }
         } else {
             const [amountArg, sideArg] = args;
-            if (!amountArg || isNaN(Number(amountArg)) || Number(amountArg) <= 0) {
-                await context.reply(`${emojis[0]} **| Lỗi:** Số lượng xu không hợp lệ.`);
-                return;
+            if (amountArg !== "all") {
+                if (!amountArg || isNaN(Number(amountArg)) || Number(amountArg) <= 0) {
+                    await context.reply(`${emojis[0]} **| Lỗi:** Số lượng xu không hợp lệ.`);
+                    return;
+                }
             }
 
-            amount = parseInt(amountArg);
+            amount = amountArg === "all" ? (userData.cash > 1000000 ? 1000000 : userData.cash) : parseInt(amountArg);
             side = ['tails', 't'].includes(sideArg?.toLowerCase()) ? 'tails' : 'heads';
         }
 
