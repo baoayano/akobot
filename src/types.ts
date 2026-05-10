@@ -10,6 +10,7 @@ export type CommandContext = ChatInputCommandInteraction | Message<boolean>;
 
 export interface BotCommand {
   data: SlashCommandBuilder;
+  aliases?: string[];
   execute(context: CommandContext, client: BotClient, args?: string[]): Promise<void> | void;
 }
 

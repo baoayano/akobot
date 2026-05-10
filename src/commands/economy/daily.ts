@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import type { BotClient, CommandContext } from '../../types.js';
 import { formatEmoji } from '../../utils/emoji.js';
-import { getData,  } from '../../utils/user.js';
+import { getData } from '../../utils/user.js';
 import { formatNumber } from '../../utils/number.js';
 
 export default {

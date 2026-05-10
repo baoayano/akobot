@@ -9,6 +9,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('level')
         .setDescription('Hiển thị cấp độ hiện tại của bạn.'),
+    aliases: ['lvl'],
     async execute(context: CommandContext, _client: BotClient) {
         if (!('member' in context) || !context.member) {
             await context.reply(`${formatEmoji('1411227532459638875', 'chocolaglare', false)} **| Lỗi:** Không thể xác định thành viên.`);

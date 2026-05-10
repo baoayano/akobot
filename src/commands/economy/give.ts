@@ -93,7 +93,7 @@ export default {
         const dailyLimit = getSendLimit(myLevel);
 
         if (totalSent + amount > dailyLimit) {
-            await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan đã vượt quá giới hạn giao dịch trong ngày rồi.\nHôm nay anh đã giao dịch tổng cộng **${formatNumber(totalSent)} xu** rồi, giới hạn của anh là **${formatNumber(dailyLimit)} xu** mỗi ngày mà >.<`);
+            await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan đã vượt quá giới hạn giao dịch trong ngày rồi.\nHôm nay anh chỉ có thể giao dịch thêm **${formatNumber(dailyLimit - totalSent)} xu** thôi >.<`);
             return;
         }
 

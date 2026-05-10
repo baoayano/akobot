@@ -10,12 +10,17 @@ export default {
     const emojis = formatEmojis([
       { id: '1495645888121667706', name: 'Juvia_shook' },
       { id: '1502589246047780935', name: 'money', animated: true },
-      { id: '1411224061991845959', name: 'emojigg_Aww' }
+      { id: '1411224061991845959', name: 'emojigg_Aww' },
+      { id: '1411224000444498023', name: 'Happy', animated: true }
     ]);
     const listCommands = [
       {
         title: `${emojis[1]} Lệnh tài chính`,
         commands: [ "cash", "ruby", "give", "daily" ]
+      },
+      {
+        title: `${emojis[3]} Lệnh giải trí`,
+        commands: [ "coinflip" ]
       },
       {
         title: `${emojis[2]} Lệnh tiện ích`,

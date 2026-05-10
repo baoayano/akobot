@@ -15,5 +15,12 @@ export async function loadCommands(client: BotClient, directory: string): Promis
 
     client.commands.set(command.data.name, command as BotCommand);
     client.prefixCommands.set(command.data.name, command as BotCommand);
+
+    // Register aliases for prefix commands
+    if (command.aliases && Array.isArray(command.aliases)) {
+      for (const alias of command.aliases) {
+        client.prefixCommands.set(alias.toLowerCase(), command as BotCommand);
+      }
+    }
   }
 }

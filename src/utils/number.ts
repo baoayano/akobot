@@ -23,3 +23,14 @@ export function formatNumber(value: number | bigint | string, decimals?: number)
 }
 
 export default formatNumber;
+
+export function discordTimestamp(
+  date = Date.now(),
+  style = "R"
+) {
+  const timestamp = Math.floor(
+    new Date(date).getTime() / 1000
+  );
+
+  return `<t:${timestamp}:${style}>`;
+}
