@@ -97,30 +97,29 @@ export default {
 
         const msg = await context.reply(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${emojis[2]}`);
 
-        // sleep 1-3 seconds
-        await new Promise(resolve => setTimeout(resolve, [1000, 1500, 2000, 2500, 3000][Math.floor(Math.random() * 5)]));
+        setTimeout(async () => {
+            // coin flip tùy vào số tiền cược
+            const { result, win, jackpotWin } = coinflip(side, amount, userData.pray_luck ?? 0);
 
-        // coin flip tùy vào số tiền cược
-        const { result, win, jackpotWin } = coinflip(side, amount, userData.pray_luck ?? 0);
+            if (win) {
+                const winCoins = amount * 2;
+                userData.user.cash -= amount; // trừ tiền cược
+                userData.user.cash += winCoins;
+                await userData.user.save();
 
-        if (win) {
-            const winCoins = amount * 2;
-            userData.user.cash -= amount; // trừ tiền cược
-            userData.user.cash += winCoins;
-            await userData.user.save();
-
-            if (jackpotWin) {
-                await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thắng **${formatNumber(winCoins)} xu**! Pha này là **trời cứu** đó!! >.<`);
+                if (jackpotWin) {
+                    await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thắng **${formatNumber(winCoins)} xu**! Pha này là **trời cứu** đó!! >.<`);
+                } else {
+                    await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thắng **${formatNumber(winCoins)} xu**! Chúc mừng onii-chan nhé >.<`);
+                }
             } else {
-                await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thắng **${formatNumber(winCoins)} xu**! Chúc mừng onii-chan nhé >.<`);
+                userData.user.cash -= amount;
+                await userData.user.save();
+
+                await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thua mất rồi! Đừng buồn nhé >.<`);
             }
-        } else {
-            userData.user.cash -= amount;
-            await userData.user.save();
 
-            await msg.edit(`${emojis[1]} **| Onii-chan @${username}** đã đặt cược **${formatNumber(amount)} xu** vào mặt **${side === 'heads' ? 'Ngửa' : 'Sấp'}**.\nĐang tung đồng xu... ${result === 'heads' ? emojis[3] : emojis[4]} và anh đã thua mất rồi! Đừng buồn nhé >.<`);
-        }
-
-        await processLevelIncrease(context, _client, true);
+            await processLevelIncrease(context, _client, true);
+        }, [1000, 1500, 2000, 2500, 3000][Math.floor(Math.random() * 5)])
     }
 };
