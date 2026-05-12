@@ -66,7 +66,7 @@ export default {
                     text: 'Sẽ cập nhật thêm các yếu tố ảnh hưởng đến tỉ giá trong tương lai >.<'
                 })
 
-            await context.reply({ embeds: [embed], ephemeral: true });
+            await context.reply({ embeds: [embed] });
             return;
         } else {
             if (amount > 1e9) {
@@ -115,7 +115,7 @@ export default {
                 .setEmoji('1411224598326018088');
             const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(confirmButton, cancelButton);
 
-            const msg = await context.reply({ embeds: [embed], components: [actionRow], ephemeral: true });
+            const msg = await context.reply({ embeds: [embed], components: [actionRow] });
 
             setTimeout(async () => {
                 try {

@@ -138,7 +138,7 @@ export default {
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(confirmButton, cancelButton);
 
-        const msg = await context.reply({ embeds: [embed], components: [row], ephemeral: true });
+        const msg = await context.reply({ embeds: [embed], components: [row] });
 
         setTimeout(async () => {
             try {
