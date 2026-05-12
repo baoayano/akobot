@@ -22,14 +22,14 @@ export default {
       },
       {
         title: `${emojis[3]} Lệnh giải trí`,
-        commands: [ "coinflip", "pray" ]
+        commands: [ "coinflip", "fish" ]
       },
       {
         title: `${emojis[4]} Lệnh xã hội`,
-        commands: [ "level", "avatar" ]
+        commands: [ "level", "avatar", "wallpaper", "pray" ]
       },
       {
-        title: `${emojis[5]} Lệnh biểu cảm`,
+        title: `${emojis[5]} Lệnh hành động`,
         commands: [ "kiss", "pat" ]
       },
       {
@@ -45,7 +45,7 @@ export default {
         name: context.client.user?.username || 'Bot',
         iconURL: `https://cdn.discordapp.com/avatars/${context.member?.user.id}/${context.member?.user.avatar}.png`
       })
-      .setDescription('Dưới đây là **list các lệnh có sẵn** mà onii-chan có thể dùng >.<\nNếu cần thêm hỗ trợ, hãy liên hệ với discord **[Quán Trà Asako](https://discord.gg/kSTM8B86eA)** nhé!')
+      .setDescription('**Prefix gốc:** `ako`\n\nDưới đây là **list các lệnh có sẵn** mà onii-chan có thể dùng >.<\nNếu cần thêm hỗ trợ, hãy liên hệ với discord **[Quán Trà Asako](https://discord.gg/kSTM8B86eA)** nhé!')
       .setColor(0xa382a5)
       .addFields(listCommands.map(group => ({
         name: group.title,

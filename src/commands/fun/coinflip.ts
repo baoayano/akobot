@@ -90,7 +90,7 @@ export default {
             side = ['tails', 't'].includes(sideArg?.toLowerCase()) ? 'tails' : 'heads';
         }
 
-        if (userData.cash < amount) {
+        if (userData.cash < amount || amount <= 0) {
             await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan **@${username}** không đủ xu để đặt cược.`);
             return;
         }
