@@ -82,24 +82,28 @@ export function getRandomFish(
     luckPoint = 0,
     rod?: string
 ) {
-    // clone base luck
-    let totalLuck = luckPoint;
-
-    // normalize rod name
+    // separate rod buffs from player luck contribution
+    // rod buffs remain the same and are applied additively
     const rodName = rod?.toLowerCase() || '';
+    let rodBuff = 0;
 
-    // rod buffs
     if (rodName.includes('golden')) {
-        totalLuck += 25;
+        rodBuff += 25;
     }
 
     if (rodName.includes('mythic')) {
-        totalLuck += 75;
+        rodBuff += 75;
     }
 
     if (rodName.includes('omega')) {
-        totalLuck += 150;
+        rodBuff += 150;
     }
+
+    // scale down the player's luck contribution to avoid overpowering rarities
+    // use a soft log scale so very large luckPoint yields diminishing returns
+    const luckContribution = Math.log10(luckPoint + 1) * 0.6; // tuned down
+
+    const totalLuck = rodBuff + luckContribution;
 
     // mất dạy mode
     // càng nhiều luck càng dễ ra đồ hiếm
