@@ -45,7 +45,7 @@ export default {
         name: context.client.user?.username || 'Bot',
         iconURL: `https://cdn.discordapp.com/avatars/${context.member?.user.id}/${context.member?.user.avatar}.png`
       })
-      .setDescription('**Prefix gốc:** `ako`\n\nDưới đây là **list các lệnh có sẵn** mà onii-chan có thể dùng >.<\nNếu cần thêm hỗ trợ, hãy liên hệ với discord **[Quán Trà Asako](https://discord.gg/kSTM8B86eA)** nhé!')
+      .setDescription('**Prefix gốc:** `rin`\n\nDưới đây là **list các lệnh có sẵn** mà onii-chan có thể dùng >.<\nNếu cần thêm hỗ trợ, hãy liên hệ với discord **[Quán Trà Asako](https://discord.gg/kSTM8B86eA)** nhé!')
       .setColor(0xa382a5)
       .addFields(listCommands.map(group => ({
         name: group.title,

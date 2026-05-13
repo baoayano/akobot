@@ -6,7 +6,7 @@ export const config = {
   token: env.DISCORD_TOKEN ?? '',
   clientId: env.CLIENT_ID ?? '',
   guildId: env.GUILD_ID ?? '',
-  prefix: env.PREFIX ?? 'ako',
+  prefix: env.PREFIX ?? 'rin',
   mongoUri: env.MONGO_URI ?? '',
 } as const;
 

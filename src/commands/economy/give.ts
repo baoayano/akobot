@@ -76,7 +76,7 @@ export default {
 
         const validateUser = await userExists(targetUser);
         if (!validateUser) {
-            await context.reply(`${emojis[0]} **| Lỗi:** Người dùng bạn giao dịch chưa đăng ký tài khoản **AkoBot**.`);
+            await context.reply(`${emojis[0]} **| Lỗi:** Người dùng bạn giao dịch chưa đăng ký tài khoản **Rinne**.`);
             return;
         }
 

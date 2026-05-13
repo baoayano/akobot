@@ -17,7 +17,7 @@ export async function handleRegisterConfirm(interaction: ButtonInteraction) {
         const success = await handleRegistrationConfirm(interaction.user.id);
 
         const content = success
-            ? `${emojis[0]} **| Đăng ký thành công! Chúc bạn có những trải nghiệm tuyệt vời với Akobot!**`
+            ? `${emojis[0]} **| Đăng ký thành công! Chúc bạn có những trải nghiệm tuyệt vời với Rinne!**`
             : `${emojis[1]} **| Đăng ký thất bại. Vui lòng thử lại sau.**`;
 
         // Disable the original buttons in the message so they can't be clicked again

@@ -4,6 +4,7 @@ import { userExists, getData } from '../utils/user.js';
 import { getMaxLevelExp, getLevelUpCoins } from '../utils/economy.js';
 import { formatEmojis } from '../utils/emoji.js';
 import { formatNumber } from '../utils/number.js';
+import { getServerConfig } from '../utils/servers.js';
 
 const cooldown = new Set<string>();
 const cooldownTime = 5000;
@@ -16,9 +17,14 @@ export async function processLevelIncrease(message: Message | CommandContext, cl
     ]);
 
     if (message instanceof Message) {
-        const prefix = client?.prefix ?? 'ako';
-        if (message.content.toLowerCase().startsWith(prefix) && !bypass) {
-            return;
+        const prefix = client?.prefix ?? 'rin';
+        const serverConfig = await getServerConfig(message.guild?.id ?? '');
+        const usedPrefix = serverConfig?.prefix || prefix;
+
+        if (!message.content.toLowerCase().startsWith(prefix)) {
+            if (!message.content.toLowerCase().startsWith(usedPrefix)) {
+                return;
+            }
         }
 
         if (cooldown.has(message.author.id)) return;

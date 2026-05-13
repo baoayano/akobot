@@ -11,7 +11,7 @@ export default {
       return;
     }
 
-    const prefix = client.prefix ?? 'ako';
+    const prefix = client.prefix ?? 'rin';
     const serverConfig = await getServerConfig(message.guild?.id ?? '');
     const usedPrefix = serverConfig?.prefix || prefix;
     let prefixToUse = prefix;

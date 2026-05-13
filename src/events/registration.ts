@@ -29,7 +29,7 @@ export async function showRegistrationEmbed(context: CommandContext) {
     ])
 
     const embed = new EmbedBuilder()
-        .setTitle(`${emojis[0]} Lưu ý trước khi đăng ký tài khoản AkoBot`)
+        .setTitle(`${emojis[0]} Lưu ý trước khi đăng ký tài khoản Rinne`)
         .setDescription('Bot được phát triển với mục đích **giải trí** và **cung cấp các tính năng tiện ích cho người dùng**. Việc đăng ký tài khoản sẽ giúp bạn trải nghiệm đầy đủ các chức năng của bot, đồng thời giúp chúng tôi quản lý và cải thiện dịch vụ tốt hơn.')
         .addFields([
             {

@@ -24,7 +24,7 @@ const DisabledChannelSchema = new mongoose.Schema<IDisabledChannel>(
 const ServerSchema = new mongoose.Schema<IServer>(
   {
     id: { type: String, required: true, unique: true },
-    prefix: { type: String, required: true, default: 'ako' },
+    prefix: { type: String, required: true, default: 'rin' },
     disabled_channels: { type: [DisabledChannelSchema], required: true, default: [] },
   },
   { timestamps: true }
