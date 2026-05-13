@@ -21,10 +21,8 @@ export async function processLevelIncrease(message: Message | CommandContext, cl
         const serverConfig = await getServerConfig(message.guild?.id ?? '');
         const usedPrefix = serverConfig?.prefix || prefix;
 
-        if (!message.content.toLowerCase().startsWith(prefix)) {
-            if (!message.content.toLowerCase().startsWith(usedPrefix)) {
-                return;
-            }
+        if (!message.content.toLowerCase().startsWith(prefix) && !message.content.toLowerCase().startsWith(usedPrefix) && !bypass) {
+            return;
         }
 
         if (cooldown.has(message.author.id)) return;

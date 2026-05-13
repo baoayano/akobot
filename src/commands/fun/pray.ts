@@ -49,7 +49,6 @@ export default {
         }
 
         const { user } = userData;
-        user.pray_luck = (user.pray_luck ?? 0) + 1;
         await user.save();
 
         await context.reply(`${emojis[1]} **| Onii-chan <@${userId}>** đã cầu nguyện... và cảm thấy thật may mắn ${emojis[2]}\nAnh hiện đang có **${user.pray_luck}** điểm may mắn >.<\nTích cực **cầu may**, **vận may** sẽ đến!!`);
