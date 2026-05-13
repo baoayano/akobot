@@ -18,7 +18,7 @@ export default {
     const listCommands = [
       {
         title: `${emojis[1]} Lệnh tài chính`,
-        commands: [ "cash", "ruby", "give", "daily", "exchange" ]
+        commands: [ "cash", "ruby", "give", "daily", "exchange", "shop" ]
       },
       {
         title: `${emojis[3]} Lệnh giải trí`,
@@ -34,7 +34,7 @@ export default {
       },
       {
         title: `${emojis[2]} Lệnh tiện ích`,
-        commands: [ "help", "ping", "prefix" ]
+        commands: [ "help", "ping", "prefix", "fish_inventory" ]
       }
     ]
 
