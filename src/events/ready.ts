@@ -8,7 +8,7 @@ export default {
   execute(_: unknown, client: BotClient) {
     console.log(`Logged in as ${client.user?.tag}`);
     client.user?.setStatus('idle')
-    client.user?.setActivity('/help | discord.gg/kSTM8B86eA', {
+    client.user?.setActivity('/help | rinnebot.xyz', {
       type: ActivityType.Custom
     })
 

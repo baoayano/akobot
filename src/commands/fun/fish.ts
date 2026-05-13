@@ -4,6 +4,8 @@ import { formatEmojis } from '../../utils/emoji.js';
 import { getData } from '../../utils/user.js';
 import { formatNumber, discordTimestamp } from '../../utils/number.js';
 import { processLevelIncrease } from '../../events/increaseLevel.js';
+import { getConfig, setConfig } from '../../utils/config.js';
+import { getRandomFish } from '../../utils/fun.js';
 
 interface CooldownData {
     expiresAt: number;
@@ -19,7 +21,9 @@ export default {
     async execute(context: CommandContext, _client: BotClient) {
         const emojis = formatEmojis([
             { id: '1411227532459638875', name: 'chocolaglare', animated: false },
-            { id: '1481266420464484494', name: '67', animated: true }
+            { id: '1481266420464484494', name: '67', animated: true },
+            { id: '1504104410383388753', name: 'fishing', animated: true },
+            { id: '1411196789914206238', name: 'CatgirlChenHyper', animated: true },
         ])
         if (!('member' in context) || !context.member) {
             await context.reply(`${emojis[0]} **| Lỗi:** Không thể xác định thành viên.`);
@@ -41,7 +45,132 @@ export default {
         cooldown.set(userId, { expiresAt: Date.now() + 10000, messageId: null }); // đặt cooldown 10 giây
         setTimeout(() => cooldown.delete(userId), 10000); // cooldown 10 giây
 
-        // tạm thời chưa làm xong
-        await context.reply(`${emojis[1]} **| Đang phát triển lệnh này, vui lòng chờ đợi trong thời gian tới nhé >.<**`);
+        let listRewards = await getConfig('fish_rewards');
+        if (!listRewards || !Array.isArray(listRewards) || listRewards.length === 0) {
+            const defaultFish = [
+                // Common (40%)
+                { name: 'Cá thu nhỏ', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá rô phi', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá trê', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá mè', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá cơm', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá vàng nhỏ', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá chép', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá mòi', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá basa', rarity: 'Common', probability: 4.0, price: 100 },
+                { name: 'Cá bống', rarity: 'Common', probability: 4.0, price: 100 },
+
+                // Uncommon (25%)
+                { name: 'Cá hồi', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá ngừ', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá kiếm', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá nóc', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá chim', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá tuyết', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá hồng', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá thu lớn', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá bống tượng', rarity: 'Uncommon', probability: 2.5, price: 500 },
+                { name: 'Cá saba', rarity: 'Uncommon', probability: 2.5, price: 500 },
+
+                // Rare (16%)
+                { name: 'Cá mập con', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá đuối', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá barracuda', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá marlin', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá điện', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá anglerfish', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá koi vàng', rarity: 'Rare', probability: 2.0, price: 2000 },
+                { name: 'Cá hải tượng', rarity: 'Rare', probability: 2.0, price: 2000 },
+
+                // Epic (6%)
+                { name: 'Cá rồng', rarity: 'Epic', probability: 1.0, price: 10000 },
+                { name: 'Cá mập trắng', rarity: 'Epic', probability: 1.0, price: 10000 },
+                { name: 'Cá abyss', rarity: 'Epic', probability: 1.0, price: 10000 },
+                { name: 'Cá ghost', rarity: 'Epic', probability: 1.0, price: 10000 },
+                { name: 'Cá crystal', rarity: 'Epic', probability: 1.0, price: 10000 },
+                { name: 'Cá magma', rarity: 'Epic', probability: 1.0, price: 10000 },
+
+                // Legendary (1.2%)
+                { name: 'Ancient Koi', rarity: 'Legendary', probability: 0.3, price: 50000 },
+                { name: 'Void Fish', rarity: 'Legendary', probability: 0.3, price: 50000 },
+                { name: 'Celestial Whale', rarity: 'Legendary', probability: 0.3, price: 50000 },
+                { name: 'Kraken Spawn', rarity: 'Legendary', probability: 0.3, price: 50000 },
+
+                // Mythic / Secret (0.3%)
+                { name: 'Glitched Fish', rarity: 'Mythic', probability: 0.1, price: 250000 },
+                { name: 'Corrupted Leviathan', rarity: 'Mythic', probability: 0.1, price: 250000 },
+                { name: 'Ethereal Koi', rarity: 'Mythic', probability: 0.1, price: 250000 },
+
+                // Junk (9%)
+                { name: 'Giày cũ', rarity: 'Junk', probability: 2.0, price: 10 },
+                { name: 'Lon nước', rarity: 'Junk', probability: 2.0, price: 10 },
+                { name: 'Túi nilon', rarity: 'Junk', probability: 2.0, price: 10 },
+                { name: 'Cành cây', rarity: 'Junk', probability: 2.0, price: 10 },
+                { name: 'Radio hỏng', rarity: 'Junk', probability: 1.0, price: 25 },
+
+                // Treasure (2.5%)
+                { name: 'Rương cổ', rarity: 'Treasure', probability: 1.0, price: 15000 },
+                { name: 'Ngọc trai', rarity: 'Treasure', probability: 1.0, price: 12000 },
+                { name: 'Ruby biển sâu', rarity: 'Treasure', probability: 0.5, price: 30000 },
+            ];
+
+            await setConfig('fish_rewards', defaultFish);
+            listRewards = defaultFish;
+        }
+
+        const userData = await getData(userId);
+        if (!userData) {
+            await context.reply(`${emojis[0]} **| Lỗi:** Không thể lấy dữ liệu người dùng.`);
+            return;
+        }
+
+        const inventory = userData.fish_inventory || [];
+        // find cần câu trong inventory, nếu không có => lỗi
+        const fishingRod = inventory.filter((item: { name: string, quantity: number }) => (item.name.toLowerCase().includes('rod')) && item.quantity > 0);
+        if (!fishingRod || fishingRod.length === 0) {
+            await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan không có cần câu để câu cá. Hãy mua cần câu để có thể đi câu cá nhé <3`);
+            return;
+        }
+
+        const fishingRodChoose = fishingRod[0];
+
+        const reward = getRandomFish(listRewards, userData.pray_luck || 0, fishingRodChoose.name);
+        const user = userData.user;
+
+        // tự xóa cần câu quantity 0
+        const fishingRodZero = inventory.filter((item: { name: string, quantity: number }) => (item.name.toLowerCase().includes('rod')) && item.quantity === 0);
+        if (fishingRodZero && fishingRodZero.length > 0) {
+            user.fish_inventory = user.fish_inventory.filter((item: { name: string, quantity: number }) => !(item.name.toLowerCase().includes('rod') && item.quantity === 0));
+        }
+
+        // trừ 1 cần câu
+        user.fish_inventory = user.fish_inventory.map((item: { name: string, quantity: number }) => {
+            if (item.name === fishingRodChoose.name) {
+                return { name: item.name, quantity: item.quantity - 1 };
+            }
+            return item;
+        });
+
+        // cộng cá vào inventory
+        const existingFish = user.fish_inventory.find((item: { name: string, quantity: number }) => item.name === reward.name);
+        if (existingFish) {
+            user.fish_inventory = user.fish_inventory.map((item: { name: string, quantity: number }) => {
+                if (item.name === reward.name) {
+                    return { name: item.name, quantity: item.quantity + 1 };
+                }
+                return item;
+            });
+        } else {
+            user.fish_inventory.push({ name: reward.name, quantity: 1 });
+        }
+
+        await user.save();
+
+        const msg = await context.reply(`${emojis[2]} **| Onii-chan** đang câu cá...`);
+        
+        setTimeout(async () => {
+            await msg.edit(`${emojis[3]} **| Onii-chan** đã câu được **${reward.name}** >.<\n**Độ hiếm:** ${reward.rarity}\n**Giá trị:** ${formatNumber(reward.price)} xu\n\n**🎣 Tích cực câu cá, vận may sẽ tới!**`);
+            await processLevelIncrease(context, _client, true);
+        }, 2000); // delay 2 giây để tạo cảm giác câu cá
     }
 };

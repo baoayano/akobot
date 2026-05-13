@@ -71,3 +71,129 @@ export function coinflip(
     luckBonus
   };
 }
+
+export function getRandomFish(
+    fishes: {
+        name: string;
+        rarity: string;
+        probability: number;
+        price: number;
+    }[],
+    luckPoint = 0,
+    rod?: string
+) {
+    // clone base luck
+    let totalLuck = luckPoint;
+
+    // normalize rod name
+    const rodName = rod?.toLowerCase() || '';
+
+    // rod buffs
+    if (rodName.includes('golden')) {
+        totalLuck += 25;
+    }
+
+    if (rodName.includes('mythic')) {
+        totalLuck += 75;
+    }
+
+    if (rodName.includes('omega')) {
+        totalLuck += 150;
+    }
+
+    // mất dạy mode
+    // càng nhiều luck càng dễ ra đồ hiếm
+    // nhưng vẫn có khả năng dính rác :)
+
+    const modifiedFishes = fishes.map(fish => {
+        let multiplier = 1;
+
+        switch (fish.rarity) {
+            case 'Junk':
+                // giảm mạnh rác
+                multiplier = Math.max(
+                    0.1,
+                    1 - totalLuck * 0.0035
+                );
+                break;
+
+            case 'Common':
+                // nerf common
+                multiplier = Math.max(
+                    0.2,
+                    1 - totalLuck * 0.0018
+                );
+                break;
+
+            case 'Uncommon':
+                multiplier =
+                    1 + totalLuck * 0.003;
+                break;
+
+            case 'Rare':
+                multiplier =
+                    1 + totalLuck * 0.008;
+                break;
+
+            case 'Epic':
+                multiplier =
+                    1 + totalLuck * 0.016;
+                break;
+
+            case 'Legendary':
+                multiplier =
+                    1 + totalLuck * 0.035;
+                break;
+
+            case 'Mythic':
+                multiplier =
+                    1 + totalLuck * 0.07;
+                break;
+
+            case 'Treasure':
+                multiplier =
+                    1 + totalLuck * 0.02;
+                break;
+        }
+
+        return {
+            ...fish,
+            adjustedProbability:
+                fish.probability * multiplier
+        };
+    });
+
+    // tổng probability mới
+    const totalProbability =
+        modifiedFishes.reduce(
+            (sum, fish) =>
+                sum + fish.adjustedProbability,
+            0
+        );
+
+    // roll
+    let random =
+        Math.random() * totalProbability;
+
+    // chọn fish
+    for (const fish of modifiedFishes) {
+        random -= fish.adjustedProbability;
+
+        if (random <= 0) {
+            return {
+                ...fish,
+
+                // debug info
+                totalLuck,
+                rod: rod || null,
+            };
+        }
+    }
+
+    // fallback
+    return {
+        ...modifiedFishes[0],
+        totalLuck,
+        rod: rod || null,
+    };
+}
