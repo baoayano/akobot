@@ -21,7 +21,7 @@ export async function processLevelIncrease(message: Message | CommandContext, cl
         const serverConfig = await getServerConfig(message.guild?.id ?? '');
         const usedPrefix = serverConfig?.prefix || prefix;
 
-        if (!message.content.toLowerCase().startsWith(prefix) && !message.content.toLowerCase().startsWith(usedPrefix) && !bypass) {
+        if ((message.content.toLowerCase().startsWith(prefix) || message.content.toLowerCase().startsWith(usedPrefix)) && !bypass) {
             return;
         }
 
