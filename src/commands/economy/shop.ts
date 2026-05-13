@@ -22,7 +22,7 @@ export default {
                 name: context.client.user?.username || 'Bot',
                 iconURL: `https://cdn.discordapp.com/avatars/${context.member.user.id}/${context.member.user.avatar}.png`
             })
-            .setDescription('Dưới đây là các **vật phẩm** mà onii-chan có thể mua nè >.<\n\nHãy chọn vật phẩm trong menu bên dưới để mở modal nhập số lượng.')
+            .setDescription('Dưới đây là các **vật phẩm** mà onii-chan có thể mua nè >.<')
             .addFields(
                 shopItems.map((item, index) => ({
                     name: `${index + 1}. ${item.label}`,

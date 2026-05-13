@@ -18,8 +18,8 @@ export const defaultShopItems: ShopItem[] = [
 	{
 		id: 'basic_rod',
 		label: 'Cần câu cá',
-		description: '3,000 Xu - vật phẩm cần để đi câu',
-		price: 3000,
+		description: '10,000 Xu - vật phẩm cần để đi câu',
+		price: 10000,
 		inventoryName: 'Basic Rod',
 		quantityMode: 'durability',
 		durabilityPerUnit: 100,
