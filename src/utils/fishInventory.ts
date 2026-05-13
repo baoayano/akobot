@@ -30,11 +30,11 @@ function formatInventoryItem(item: InventoryItem): string {
 
 	if (isDurabilityItem) {
 		// keep a hint for durability items
-		return `${formatNumber(item.quantity)} độ bền`;
+		return `**${formatNumber(item.quantity)}** độ bền`;
 	}
 
-	// for stack items show only the number (no 'Số lượng:' prefix)
-	return `${formatNumber(item.quantity)}`;
+	// for stack items show only the number with trailing 'x' (no space)
+	return `${formatNumber(item.quantity)}x`;
 }
 
 export function buildFishInventoryPage(
@@ -46,10 +46,15 @@ export function buildFishInventoryPage(
 	botAvatarUrl?: string
 ): FishInventoryPage {
 	const safeItems = items.filter((item) => item.quantity > 0);
-	const pages = chunkItems(safeItems, ITEMS_PER_PAGE);
-	const totalPages = Math.max(pages.length, 1);
+
+	// Separate rods (durability items) from fish/stack items for easier management
+	const rods = safeItems.filter((item) => item.name.toLowerCase().includes('rod'));
+	const fishes = safeItems.filter((item) => !item.name.toLowerCase().includes('rod'));
+
+	const fishPages = chunkItems(fishes, ITEMS_PER_PAGE);
+	const totalPages = Math.max(fishPages.length, 1);
 	const currentPage = Math.min(Math.max(page, 1), totalPages);
-	const pageItems = pages[currentPage - 1] ?? [];
+	const pageItems = fishPages[currentPage - 1] ?? [];
 
 	const embed = new EmbedBuilder()
 		.setTitle('Kho đồ cá')
@@ -66,14 +71,31 @@ export function buildFishInventoryPage(
 		)
 		.setFooter({ text: `Trang ${currentPage}/${totalPages}` });
 
+	// First, show rods in a dedicated (non-inline) field so they are easy to find/manage
+	if (rods.length > 0) {
+		const rodLines = rods.map((r) => `${r.name} — ${formatInventoryItem(r)}`);
+		embed.addFields({ name: 'Cần câu (Rod)', value: rodLines.join('\n'), inline: false });
+	}
+
+	// Then show paginated fish/stack items as inline fields
 	if (pageItems.length > 0) {
-		embed.addFields(
-			pageItems.map((item, index) => ({
-				name: `${item.name}`,
-				value: formatInventoryItem(item),
-				inline: true,
-			}))
-		);
+		const fields = pageItems.map((item, index) => ({
+			name: `${item.name}`,
+			value: formatInventoryItem(item),
+			inline: true,
+		}));
+
+		// If there are fewer than 6 fields on the page, add one empty inline field to keep layout tidy
+		if (fields.length < 6) {
+			fields.push({ name: '\u200b', value: '\u200b', inline: true });
+		}
+
+		embed.addFields(fields);
+	} else {
+		// If there are no fish items on this page but rods exist, add an empty inline field for layout
+		if (rods.length > 0) {
+			embed.addFields({ name: '\u200b', value: '\u200b', inline: true });
+		}
 	}
 
 	const prevButton = new ButtonBuilder()
