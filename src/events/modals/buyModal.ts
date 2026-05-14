@@ -25,7 +25,7 @@ export async function handleBuySelectMenu(interaction: StringSelectMenuInteracti
 
 	if (interaction.user.id !== userId) {
 		await interaction.reply({
-			content: `${emojis[0]} **| Lỗi:** Bạn không thể mua hàng bằng menu của người khác.`,
+			content: `${emojis[0]} **| Lỗi:** Onii-chan không thể mua hàng bằng menu của người khác.`,
 			ephemeral: true,
 		});
 		return;
@@ -75,7 +75,7 @@ export async function handleBuyModalSubmit(interaction: ModalSubmitInteraction):
 
 	if (interaction.user.id !== userId) {
 		await interaction.reply({
-			content: `${emojis[1]} **| Lỗi:** Bạn không thể gửi modal của người khác.`,
+			content: `${emojis[1]} **| Lỗi:** Onii-chan không thể gửi modal của người khác.`,
 			ephemeral: true,
 		});
 		return;
@@ -107,7 +107,7 @@ export async function handleBuyModalSubmit(interaction: ModalSubmitInteraction):
 
 	if (user.cash < totalPrice) {
 		await interaction.reply({
-			content: `${emojis[0]} **| Lỗi:** Bạn không đủ xu để mua **${quantity} x ${item.label}**. Cần **${formatNumber(totalPrice)} xu** nhưng hiện chỉ có **${formatNumber(user.cash)} xu**.`,
+			content: `${emojis[0]} **| Lỗi:** Onii-chan không đủ xu để mua **${quantity}x ${item.label}**. Cần **${formatNumber(totalPrice)} xu** nhưng hiện chỉ có **${formatNumber(user.cash)} xu**.`,
 			ephemeral: true,
 		});
 		return;
@@ -129,7 +129,7 @@ export async function handleBuyModalSubmit(interaction: ModalSubmitInteraction):
 	await user.save();
 
 	await interaction.reply({
-		content: `${emojis[1]} **| Mua hàng thành công!** Bạn đã mua **${quantity}x ${item.label}** với giá **${formatNumber(totalPrice)} xu**.`,
-		ephemeral: true,
+		content: `${emojis[1]} **| Mua hàng thành công!** Onii-chan **@${interaction.user.username}** đã mua **${quantity}x ${item.label}** với giá **${formatNumber(totalPrice)} xu**.`,
+		ephemeral: false,
 	});
 }

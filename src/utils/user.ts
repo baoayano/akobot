@@ -35,6 +35,7 @@ export async function getData(userId: string) {
         lastDaily: user.lastDaily,
         pray_luck: user.pray_luck,
         fish_inventory: user.fish_inventory,
+        fish_rod: user.fish_rod,
         user
     };
 }

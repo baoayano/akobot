@@ -3,7 +3,8 @@ import type { BotClient } from '../types.js';
 import { userExists } from '../utils/user.js';
 import { showRegistrationEmbed } from './registration.js';
 import { handleButtonInteraction } from './buttonHandler.js';
-import { handleBuyModalSubmit, handleBuySelectMenu } from './buttons/buyModal.js';
+import { handleSelectMenuInteraction } from './selectMenuHandler.js';
+import { handleModalInteraction } from './modalHandler.js';
 
 export default {
   name: Events.InteractionCreate,
@@ -15,12 +16,12 @@ export default {
     }
 
     if (interaction.isStringSelectMenu()) {
-      await handleBuySelectMenu(interaction);
+      await handleSelectMenuInteraction(interaction);
       return;
     }
 
     if (interaction.isModalSubmit()) {
-      await handleBuyModalSubmit(interaction);
+      await handleModalInteraction(interaction);
       return;
     }
 

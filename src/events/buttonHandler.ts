@@ -2,7 +2,8 @@ import { ButtonInteraction } from 'discord.js';
 import { handleRegisterConfirm } from './buttons/registrationButtons.js';
 import { handleConfirmCashTransaction, handleCancelCashTransaction } from './buttons/confirmCashTransaction.js';
 import { handleConfirmRubyExchange, handleCancelRubyExchange } from './buttons/confirmRubyExchange.js';
-import { handleFishInventoryButton } from './buttons/fishInventoryButtons.js';
+import { handleFishInventoryButton, handleFishRodSwitchButton } from './buttons/fishInventoryButtons.js';
+import { handleFishSellOpenButton, handleFishSellPageButton } from './buttons/sellFishInventoryButtons.js';
 import { formatEmoji } from '../utils/emoji.js';
 
 export async function handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
@@ -36,6 +37,16 @@ export async function handleButtonInteraction(interaction: ButtonInteraction): P
         case 'fish_inventory_prev':
         case 'fish_inventory_next':
             await handleFishInventoryButton(interaction);
+            return;
+        case 'fish_rod_switch':
+            await handleFishRodSwitchButton(interaction);
+            return;
+        case 'fish_sell_open':
+            await handleFishSellOpenButton(interaction);
+            return;
+        case 'fish_sell_prev':
+        case 'fish_sell_next':
+            await handleFishSellPageButton(interaction);
             return;
         default:
             console.warn(`Unknown button customId: ${interaction.customId}`);

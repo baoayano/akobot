@@ -10,6 +10,7 @@ export interface IUser {
   lastDaily: Date | null;
   pray_luck: number;
   fish_inventory: { name: string; quantity: number }[]
+  fish_rod?: string;
 }
 
 const UserSchema = new mongoose.Schema<IUser>({
@@ -21,7 +22,8 @@ const UserSchema = new mongoose.Schema<IUser>({
   exp: { type: Number, required: true, default: 0 },
   lastDaily: { type: Date, default: null },
   pray_luck: { type: Number, required: true, default: 0 },
-  fish_inventory: { type: [{ name: String, quantity: Number }], default: [] }
+  fish_inventory: { type: [{ name: String, quantity: Number }], default: [] },
+  fish_rod: { type: String, default: '' }
 }, { timestamps: true });
 
 export const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);

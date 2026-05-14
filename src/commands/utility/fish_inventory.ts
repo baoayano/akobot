@@ -2,7 +2,12 @@ import { SlashCommandBuilder } from 'discord.js';
 import type { BotClient, CommandContext } from '../../types.js';
 import { formatEmojis } from '../../utils/emoji.js';
 import { getData } from '../../utils/user.js';
-import { buildFishInventoryPage } from '../../utils/fishInventory.js';
+import {
+	buildFishInventoryPage,
+	getSortedFishInventoryItems,
+	resolveFishRodName,
+	scheduleFishInventoryButtonDisable,
+} from '../../utils/fishInventory.js';
 
 export default {
 	data: new SlashCommandBuilder()
@@ -26,15 +31,29 @@ export default {
 			return;
 		}
 
-		const page = buildFishInventoryPage(
-			data.fish_inventory || [],
+		const sortedItems = await getSortedFishInventoryItems(data.fish_inventory || []);
+		const resolvedFishRod = resolveFishRodName(data.fish_inventory || [], data.fish_rod);
+
+		if (resolvedFishRod !== data.fish_rod) {
+			data.user.fish_rod = resolvedFishRod || '';
+			await data.user.save();
+		}
+
+		const page = await buildFishInventoryPage(
+			sortedItems,
 			1,
 			context.member.user.id,
 			context.member.user.username,
+			resolvedFishRod,
 			undefined,
 			context.client.user?.displayAvatarURL() || undefined
 		);
 
-		await context.reply({ embeds: [page.embed], components: page.components });
+		const replyResponse = await context.reply({ embeds: [page.embed], components: page.components, withResponse: true });
+		const message = 'resource' in replyResponse ? replyResponse.resource?.message : replyResponse;
+
+		if (message) {
+			scheduleFishInventoryButtonDisable(message, page.components);
+		}
 	},
 };

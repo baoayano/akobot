@@ -6,6 +6,7 @@ import { formatNumber, discordTimestamp } from '../../utils/number.js';
 import { processLevelIncrease } from '../../events/increaseLevel.js';
 import { getConfig, setConfig } from '../../utils/config.js';
 import { getRandomFish } from '../../utils/fun.js';
+import { resolveFishRodName, getNextFishRodName } from '../../utils/fishInventory.js';
 
 interface CooldownData {
     expiresAt: number;
@@ -125,44 +126,41 @@ export default {
         }
 
         const inventory = userData.fish_inventory || [];
-        // find cần câu trong inventory, nếu không có => lỗi
-        const fishingRod = inventory.filter((item: { name: string, quantity: number }) => (item.name.toLowerCase().includes('rod')) && item.quantity > 0);
+        const fishingRod = inventory.filter((item: { name: string, quantity: number }) => item.name.toLowerCase().includes('rod') && item.quantity > 0);
         if (!fishingRod || fishingRod.length === 0) {
             await context.reply(`${emojis[0]} **| Lỗi:** Onii-chan không có cần câu để câu cá. Hãy mua cần câu để có thể đi câu cá nhé <3`);
             return;
         }
 
-        const fishingRodChoose = fishingRod[0];
-
-        const reward = getRandomFish(listRewards, userData.pray_luck || 0, fishingRodChoose.name);
         const user = userData.user;
+        const resolvedFishingRod = resolveFishRodName(inventory, user.fish_rod) || fishingRod[0].name;
+        user.fish_rod = resolvedFishingRod;
 
-        // tự xóa cần câu quantity 0
-        const fishingRodZero = inventory.filter((item: { name: string, quantity: number }) => (item.name.toLowerCase().includes('rod')) && item.quantity === 0);
-        if (fishingRodZero && fishingRodZero.length > 0) {
-            user.fish_inventory = user.fish_inventory.filter((item: { name: string, quantity: number }) => !(item.name.toLowerCase().includes('rod') && item.quantity === 0));
-        }
+        const reward = getRandomFish(listRewards, userData.pray_luck || 0, resolvedFishingRod);
 
-        // trừ 1 cần câu
-        user.fish_inventory = user.fish_inventory.map((item: { name: string, quantity: number }) => {
-            if (item.name === fishingRodChoose.name) {
+        let updatedInventory = user.fish_inventory.map((item: { name: string, quantity: number }) => {
+            if (item.name === resolvedFishingRod) {
                 return { name: item.name, quantity: item.quantity - 1 };
             }
             return item;
-        });
+        }).filter((item: { name: string, quantity: number }) => item.quantity > 0);
 
-        // cộng cá vào inventory
-        const existingFish = user.fish_inventory.find((item: { name: string, quantity: number }) => item.name === reward.name);
+        const nextFishingRod = getNextFishRodName(updatedInventory, resolvedFishingRod);
+        user.fish_rod = nextFishingRod || '';
+
+        const existingFish = updatedInventory.find((item: { name: string, quantity: number }) => item.name === reward.name);
         if (existingFish) {
-            user.fish_inventory = user.fish_inventory.map((item: { name: string, quantity: number }) => {
+            updatedInventory = updatedInventory.map((item: { name: string, quantity: number }) => {
                 if (item.name === reward.name) {
                     return { name: item.name, quantity: item.quantity + 1 };
                 }
                 return item;
             });
         } else {
-            user.fish_inventory.push({ name: reward.name, quantity: 1 });
+            updatedInventory.push({ name: reward.name, quantity: 1 });
         }
+
+        user.fish_inventory = updatedInventory;
 
         await user.save();
 
