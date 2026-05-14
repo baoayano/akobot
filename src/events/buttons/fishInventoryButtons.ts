@@ -28,7 +28,7 @@ export async function handleFishInventoryButton(interaction: ButtonInteraction):
 		return;
 	}
 
-	const currentPage = Number.parseInt(pageText, 6) || 1;
+	const currentPage = Number.parseInt(pageText, 10) || 1;
 	const nextPage = action === 'fish_inventory_next' ? currentPage + 1 : currentPage - 1;
 
 	const page = buildFishInventoryPage(
