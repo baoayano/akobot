@@ -143,10 +143,15 @@ export default {
                 return { name: item.name, quantity: item.quantity - 1 };
             }
             return item;
-        }).filter((item: { name: string, quantity: number }) => item.quantity > 0);
+        });
 
-        const nextFishingRod = getNextFishRodName(updatedInventory, resolvedFishingRod);
-        user.fish_rod = nextFishingRod || '';
+        const currentRodQuantity = updatedInventory.find((item: { name: string, quantity: number }) => item.name === resolvedFishingRod)?.quantity || 0;
+        if (currentRodQuantity <= 0) {
+            const nextFishingRod = getNextFishRodName(updatedInventory.filter((item: { name: string, quantity: number }) => item.quantity > 0), resolvedFishingRod);
+            user.fish_rod = nextFishingRod || '';
+        }
+
+        updatedInventory = updatedInventory.filter((item: { name: string, quantity: number }) => item.quantity > 0);
 
         const existingFish = updatedInventory.find((item: { name: string, quantity: number }) => item.name === reward.name);
         if (existingFish) {
