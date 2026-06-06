@@ -302,17 +302,13 @@ export async function buildFishInventoryPage(
 			inline: true,
 		}));
 
-		// If there are fewer than 6 fields on the page, add one empty inline field to keep layout tidy
-		if (fields.length < 6) {
+		// Complete only the current three-column row without creating another empty row.
+		const emptyFieldCount = (3 - (fields.length % 3)) % 3;
+		for (let index = 0; index < emptyFieldCount; index += 1) {
 			fields.push({ name: '\u200b', value: '\u200b', inline: true });
 		}
 
 		embed.addFields(fields);
-	} else {
-		// If there are no fish items on this page but rods exist, add an empty inline field for layout
-		if (rods.length > 0) {
-			embed.addFields({ name: '\u200b', value: '\u200b', inline: true });
-		}
 	}
 
 	const prevButton = new ButtonBuilder()
@@ -336,8 +332,19 @@ export async function buildFishInventoryPage(
 		.setLabel('Bán cá')
 		.setStyle(ButtonStyle.Success)
 		.setDisabled(fishes.length === 0);
+	const sellAllButton = new ButtonBuilder()
+		.setCustomId(`fish_sell_all:${userId}`)
+		.setLabel('Bán toàn bộ')
+		.setStyle(ButtonStyle.Premium)
+		.setDisabled(fishes.length === 0);
 
-	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(prevButton, nextButton, switchRodButton, sellButton);
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		prevButton,
+		nextButton,
+		switchRodButton,
+		sellButton,
+		sellAllButton
+	);
 
 	return {
 		embed,

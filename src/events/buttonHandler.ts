@@ -3,7 +3,13 @@ import { handleRegisterConfirm } from './buttons/registrationButtons.js';
 import { handleConfirmCashTransaction, handleCancelCashTransaction } from './buttons/confirmCashTransaction.js';
 import { handleConfirmRubyExchange, handleCancelRubyExchange } from './buttons/confirmRubyExchange.js';
 import { handleFishInventoryButton, handleFishRodSwitchButton } from './buttons/fishInventoryButtons.js';
-import { handleFishSellOpenButton, handleFishSellPageButton } from './buttons/sellFishInventoryButtons.js';
+import {
+    handleFishSellAllButton,
+    handleFishSellAllCancelButton,
+    handleFishSellAllConfirmButton,
+    handleFishSellOpenButton,
+    handleFishSellPageButton,
+} from './buttons/sellFishInventoryButtons.js';
 import { formatEmoji } from '../utils/emoji.js';
 
 export async function handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
@@ -47,6 +53,15 @@ export async function handleButtonInteraction(interaction: ButtonInteraction): P
         case 'fish_sell_prev':
         case 'fish_sell_next':
             await handleFishSellPageButton(interaction);
+            return;
+        case 'fish_sell_all':
+            await handleFishSellAllButton(interaction);
+            return;
+        case 'fish_sell_all_confirm':
+            await handleFishSellAllConfirmButton(interaction);
+            return;
+        case 'fish_sell_all_cancel':
+            await handleFishSellAllCancelButton(interaction);
             return;
         default:
             console.warn(`Unknown button customId: ${interaction.customId}`);
