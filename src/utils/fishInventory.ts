@@ -335,7 +335,7 @@ export async function buildFishInventoryPage(
 	const sellAllButton = new ButtonBuilder()
 		.setCustomId(`fish_sell_all:${userId}`)
 		.setLabel('Bán toàn bộ')
-		.setStyle(ButtonStyle.Premium)
+		.setStyle(ButtonStyle.Success)
 		.setDisabled(fishes.length === 0);
 
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
