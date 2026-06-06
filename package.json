@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/src/index.js",
     "dev": "tsx src/index.ts",
-    "deploy": "tsx scripts/deploy-commands.ts"
+    "deploy": "tsx scripts/deploy-commands.ts",
+    "autorun": "git pull && npm run build && pm2 restart index"
   },
   "engines": {
     "node": ">=18.17.0"
