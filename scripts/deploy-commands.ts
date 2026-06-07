@@ -26,9 +26,7 @@ for (const file of commandFiles) {
 }
 
 const rest = new REST({ version: '10' }).setToken(config.token);
-const route = config.guildId
-  ? Routes.applicationGuildCommands(config.clientId, config.guildId)
-  : Routes.applicationCommands(config.clientId);
+const route = Routes.applicationCommands(config.clientId);
 
 await rest.put(route, { body: commands });
 
