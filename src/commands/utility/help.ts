@@ -26,7 +26,7 @@ export default {
       },
       {
         title: `${emojis[4]} Lệnh xã hội`,
-        commands: [ "level", "avatar", "wallpaper", "pray" ]
+        commands: [ "level", "leaderboard", "avatar", "wallpaper", "pray" ]
       },
       {
         title: `${emojis[5]} Lệnh hành động`,

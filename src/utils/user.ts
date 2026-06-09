@@ -1,5 +1,16 @@
 import { UserModel } from '../schemas/users.js';
 
+export type LeaderboardType = 'level' | 'cash';
+
+export type LeaderboardEntry = {
+  id: string;
+  cash: number;
+  level: number;
+  exp: number;
+};
+
+const LEADERBOARD_EXCLUDED_USER_IDS = ['295936488661843968'];
+
 export async function getUserOrNull(userId: string) {
   try {
     return await UserModel.findOne({ id: userId });
@@ -21,6 +32,24 @@ export async function getOrCreateUser(userId: string) {
 export async function userExists(userId: string): Promise<boolean> {
   const user = await getUserOrNull(userId);
   return !!user;
+}
+
+export async function getLeaderboard(
+  type: LeaderboardType,
+  limit = 10
+): Promise<LeaderboardEntry[]> {
+  const safeLimit = Math.min(Math.max(Math.floor(limit), 1), 25);
+  const sort = type === 'cash'
+    ? { cash: -1 as const, level: -1 as const, exp: -1 as const }
+    : { level: -1 as const, exp: -1 as const, cash: -1 as const };
+
+  return UserModel.find(
+    { id: { $nin: LEADERBOARD_EXCLUDED_USER_IDS } },
+    { _id: 0, id: 1, cash: 1, level: 1, exp: 1 }
+  )
+    .sort(sort)
+    .limit(safeLimit)
+    .lean<LeaderboardEntry[]>();
 }
 
 export async function getData(userId: string) {

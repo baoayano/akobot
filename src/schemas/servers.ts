@@ -9,6 +9,7 @@ export interface IServer {
   id: string; // guild/server id
   prefix: string;
   disabled_channels: IDisabledChannel[];
+  werewolf_category: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -26,6 +27,7 @@ const ServerSchema = new mongoose.Schema<IServer>(
     id: { type: String, required: true, unique: true },
     prefix: { type: String, required: true, default: 'rin' },
     disabled_channels: { type: [DisabledChannelSchema], required: true, default: [] },
+    werewolf_category: { type: String, required: false, default: null }
   },
   { timestamps: true }
 );
