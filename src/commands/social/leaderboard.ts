@@ -11,6 +11,7 @@ import { formatEmojis } from '../../utils/emoji.js';
 
 const emojis = formatEmojis([
     { id: '1411196248337420430', name: 'AliceFumo', animated: false },
+    { id: '1411226636875071539', name: 'Dead', animated: false },
 ]);
 
 const LEADERBOARD_LIMIT = 10;
@@ -21,13 +22,13 @@ const leaderboardConfig: Record<LeaderboardType, {
     color: number;
 }> = {
     level: {
-        title: `Bảng xếp hạng cấp độ ${emojis[0]}`,
-        description: 'Những người chơi có cấp độ cao nhất.',
+        title: "Bảng xếp hạng cấp độ",
+        description: `Những người chơi có cấp độ cao nhất ${emojis[0]}`,
         color: 0xc0ebff,
     },
     cash: {
-        title: `Bảng xếp hạng tài sản ${emojis[0]}`,
-        description: 'Những người chơi sở hữu nhiều xu nhất.',
+        title: "Bảng xếp hạng tài sản",
+        description: `Những người chơi sở hữu nhiều xu nhất ${emojis[0]}`,
         color: 0xffd166,
     },
 };
@@ -72,8 +73,8 @@ export default {
             await replyEmbed(
                 context,
                 errorEmbed(
-                    'Vui lòng chọn một loại bảng xếp hạng hợp lệ: `level` hoặc `cash`.',
-                    'Loại bảng xếp hạng không hợp lệ'
+                    emojis[1] + ' Onii-chan hãy chọn một trong 2 loại: `level` hoặc `cash`.',
+                    'Loại bảng xếp hạng không hợp lệ >.<'
                 )
             );
             return;
@@ -84,7 +85,10 @@ export default {
         if (entries.length === 0) {
             await replyEmbed(
                 context,
-                errorEmbed('Chưa có dữ liệu người chơi để xếp hạng.', 'Bảng xếp hạng đang trống')
+                errorEmbed(
+                    emojis[1] + ' Chưa có dữ liệu người chơi để xếp hạng.',
+                    'Bảng xếp hạng đang trống'
+                )
             );
             return;
         }
@@ -101,6 +105,10 @@ export default {
             thumbnail: context.client.user?.displayAvatarURL() || undefined,
             footer: `Top ${entries.length} người chơi • Xếp hạng toàn bot`,
             timestamp: true,
+            author: {
+                name: context.client.user?.username || 'Bot',
+                iconURL: `https://cdn.discordapp.com/avatars/${context.member?.user.id}/${context.member?.user.avatar}.png` || undefined,
+            }
         });
 
         await replyEmbed(context, embed);
