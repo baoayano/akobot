@@ -99,6 +99,10 @@ export function getRandomFish(
         rodBuff += 150;
     }
 
+    if (rodName.includes('void')) {
+        rodBuff += 220;
+    }
+
     // scale down the player's luck contribution to avoid overpowering rarities
     // use a soft log scale so very large luckPoint yields diminishing returns
     const luckContribution = Math.log10(luckPoint + 1) * 0.6; // tuned down
