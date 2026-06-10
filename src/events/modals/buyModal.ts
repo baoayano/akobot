@@ -104,16 +104,22 @@ export async function handleBuyModalSubmit(interaction: ModalSubmitInteraction):
 
 	const user = await getOrCreateUser(interaction.user.id);
 	const totalPrice = item.price * quantity;
+	const isRuby = item.isRuby ?? false;
+	const userBalance = isRuby ? user.ruby : user.cash;
 
-	if (user.cash < totalPrice) {
+	if (userBalance < totalPrice) {
 		await interaction.reply({
-			content: `${emojis[0]} **| Lỗi:** Onii-chan không đủ xu để mua **${quantity}x ${item.label}**. Cần **${formatNumber(totalPrice)} xu** nhưng hiện chỉ có **${formatNumber(user.cash)} xu**.`,
+			content: `${emojis[0]} **| Lỗi:** Onii-chan không đủ ${isRuby ? 'ruby' : 'xu'} để mua **${quantity}x ${item.label}**. Cần **${formatNumber(totalPrice)} ${isRuby ? 'ruby' : 'xu'}** nhưng hiện chỉ có **${formatNumber(userBalance)} ${isRuby ? 'ruby' : 'xu'}**.`,
 			ephemeral: true,
 		});
 		return;
 	}
 
-	user.cash -= totalPrice;
+	if (isRuby) {
+		user.ruby -= totalPrice;
+	} else {
+		user.cash -= totalPrice;
+	}
 
 	const inventoryQuantity = getInventoryQuantity(item, quantity);
 
@@ -129,7 +135,7 @@ export async function handleBuyModalSubmit(interaction: ModalSubmitInteraction):
 	await user.save();
 
 	await interaction.reply({
-		content: `${emojis[1]} **| Mua hàng thành công!** Onii-chan **@${interaction.user.username}** đã mua **${quantity}x ${item.label}** với giá **${formatNumber(totalPrice)} xu**.`,
+		content: `${emojis[1]} **| Mua hàng thành công!** Onii-chan **@${interaction.user.username}** đã mua **${quantity}x ${item.label}** với giá **${formatNumber(totalPrice)} ${isRuby ? 'ruby' : 'xu'}**.`,
 		ephemeral: false,
 	});
 }

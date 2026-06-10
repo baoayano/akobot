@@ -27,8 +27,8 @@ export default {
                 shopItems.map((item, index) => ({
                     name: `${index + 1}. ${item.label}`,
                     value: item.quantityMode === 'durability'
-                        ? `**Giá:** ${item.price.toLocaleString('en-US')} Xu - **Độ bền:** ${item.durabilityPerUnit ?? 1}`
-                        : `**Giá:** ${item.price.toLocaleString('en-US')} Xu - **Số lượng:** 1`,
+                        ? `**Giá:** ${item.price.toLocaleString('en-US')} ${item.isRuby ? 'Ruby' : 'Xu'} - **Độ bền:** ${item.durabilityPerUnit ?? 1}`
+                        : `**Giá:** ${item.price.toLocaleString('en-US')} ${item.isRuby ? 'Ruby' : 'Xu'} - **Số lượng:** 1`,
                 }))
             )
             .setThumbnail(context.client.user?.displayAvatarURL() || '')

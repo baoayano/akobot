@@ -10,6 +10,7 @@ export type ShopItem = {
 	inventoryName: string;
 	quantityMode: ShopQuantityMode;
 	durabilityPerUnit?: number;
+	isRuby?: boolean;
 };
 
 const SHOP_ITEMS_CONFIG_KEY = 'shop_items';
@@ -23,6 +24,7 @@ export const defaultShopItems: ShopItem[] = [
 		inventoryName: 'Basic Rod',
 		quantityMode: 'durability',
 		durabilityPerUnit: 100,
+		isRuby: false
 	},
 ];
 
