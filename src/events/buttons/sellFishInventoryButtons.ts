@@ -10,6 +10,7 @@ import { formatEmojis } from '../../utils/emoji.js';
 import { formatNumber } from '../../utils/number.js';
 import { getData } from '../../utils/user.js';
 import { getFishRewardCatalog, getSortedFishInventoryItems, type InventoryItem } from '../../utils/fishInventory.js';
+import { UserModel } from '../../schemas/users.js';
 
 export type FishSellEntry = {
 	name: string;
@@ -46,6 +47,10 @@ const RARITY_SHORT: Record<string, string> = {
 
 function isFishItem(item: InventoryItem): boolean {
 	return !item.name.toLowerCase().includes('rod');
+}
+
+function isSafeCashAmount(value: number): boolean {
+	return Number.isSafeInteger(value) && value >= 0;
 }
 
 function getSellAllSummary(
@@ -348,11 +353,38 @@ export async function handleFishSellAllConfirmButton(interaction: ButtonInteract
 		return;
 	}
 
-	data.user.fish_inventory = data.user.fish_inventory.filter(
-		(item: InventoryItem) => !summary.sellableNames.has(item.name) || !isFishItem(item)
+	if (!isSafeCashAmount(summary.totalCash) || !isSafeCashAmount(data.cash + summary.totalCash)) {
+		await interaction.update({
+			content: '**Lỗi:** Số tiền giao dịch quá lớn để cộng chính xác. Không có cá nào bị bán.',
+			components: [],
+		});
+		return;
+	}
+
+	const sellableNames = [...summary.sellableNames];
+	const result = await UserModel.updateOne(
+		{
+			id: interaction.user.id,
+			fish_inventory: {
+				$elemMatch: {
+					name: { $in: sellableNames },
+					quantity: { $gt: 0 },
+				},
+			},
+		},
+		{
+			$inc: { cash: summary.totalCash },
+			$pull: { fish_inventory: { name: { $in: sellableNames } } },
+		}
 	);
-	data.user.cash += summary.totalCash;
-	await data.user.save();
+
+	if (result.modifiedCount !== 1) {
+		await interaction.update({
+			content: '**Lỗi:** Kho cá đã thay đổi trong lúc bán. Vui lòng mở lại kho và thử lại.',
+			components: [],
+		});
+		return;
+	}
 
 	await interaction.update({
 		content: `${formatEmojis([{ id: '1411224000444498023', name: 'Happy', animated: true }])[0]} **| Bán toàn bộ cá thành công!** Bạn đã bán **${formatNumber(summary.totalQuantity)} con cá** và nhận **${formatNumber(summary.totalCash)} xu**.`,
