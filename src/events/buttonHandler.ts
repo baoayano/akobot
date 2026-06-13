@@ -11,11 +11,29 @@ import {
     handleFishSellPageButton,
 } from './buttons/sellFishInventoryButtons.js';
 import { formatEmoji } from '../utils/emoji.js';
+import { handleWerewolfJoinButton } from './buttons/werewolfButtons.js';
+import { handleWerewolfRoleButton, handleWerewolfTargetButton } from '../utils/werewolfGame.js';
 
 export async function handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
     // if other user clicks the button, ignore
     const buttonCommand = interaction.customId.split(':');
     const [action, userId] = buttonCommand;
+
+    if (action === 'werewolf_join') {
+        await handleWerewolfJoinButton(interaction);
+        return;
+    }
+
+    if (action === 'werewolf_role') {
+        await handleWerewolfRoleButton(interaction);
+        return;
+    }
+
+    if (action === 'werewolf_target') {
+        await handleWerewolfTargetButton(interaction);
+        return;
+    }
+
     if (interaction.user.id !== userId) {
         await interaction.reply({
             content: `${formatEmoji('1411227532459638875', 'chocolaglare', false)} **| Lỗi:** Bạn không thể tương tác với nút này.`,

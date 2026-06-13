@@ -3,11 +3,16 @@ import type { BotClient } from '../types.js';
 import { userExists } from '../utils/user.js';
 import { showRegistrationEmbed } from './registration.js';
 import { getServerConfig } from '../utils/servers.js';
+import { handleWerewolfVoteMessage } from '../utils/werewolfGame.js';
 
 export default {
   name: Events.MessageCreate,
   async execute(message: Message, client: BotClient) {
     if (message.author.bot) {
+      return;
+    }
+
+    if (await handleWerewolfVoteMessage(message)) {
       return;
     }
 

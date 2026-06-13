@@ -18,6 +18,6 @@ export default {
         const username = context.member.user.username;
         const cash = formatNumber((await getData(context.member.user.id))?.cash ?? 0);
         
-        await context.reply(`${formatEmoji('1495655764344311808', 'KannaPog', false)} **| Hehe,** onii-chan **@${username}** đang có **${cash} xu**!`);
+        await context.reply(`${formatEmoji('1515200446338306168', 'KannaPog', false)} **| Hehe,** onii-chan **@${username}** đang có **${cash} xu**!`);
     },
 };

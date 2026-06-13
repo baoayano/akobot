@@ -27,7 +27,7 @@ export default {
     async execute(context: CommandContext, _client: BotClient, args: any[]) {
         const emojis = formatEmojis([
             { id: '1411227532459638875', name: 'chocolaglare', animated: false },
-            { id: '1495655764344311808', name: 'KannaPog', animated: false },
+            { id: '1515200446338306168', name: 'KannaPog', animated: false },
             { id: '1411226046438834187', name: 'Smug2', animated: false },
             { id: '1411226370322993193', name: 'RoNom', animated: false },
             { id: '1411225479784038440', name: 'PoiNom', animated: false }

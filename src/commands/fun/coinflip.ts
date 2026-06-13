@@ -37,9 +37,9 @@ export default {
         const emojis = formatEmojis([
             { id: '1411227532459638875', name: 'chocolaglare', animated: false },
             { id: '1411196789914206238', name: 'CatgirlChenHyper', animated: true },
-            { id: '1502882394074779728', name: 'coinflip', animated: true },
-            { id: '1502884007078002778', name: 'coinflip_head', animated: false },
-            { id: '1502884040712261792', name: 'coinflip_tail', animated: false }
+            { id: '1515201595112030250', name: 'coinflip', animated: true },
+            { id: '1515201157612568576', name: 'coinflip_head', animated: false },
+            { id: '1515201195650846902', name: 'coinflip_tail', animated: false }
         ])
         if (!('member' in context) || !context.member) {
             await context.reply(`${emojis[0]} **| Lỗi:** Không thể xác định thành viên.`);

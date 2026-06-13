@@ -28,15 +28,17 @@ export async function getServerConfig(serverId: string) {
     id: server.id,
     prefix: server.prefix,
     disabled_channels: server.disabled_channels,
+    werewolf_category: server.werewolf_category,
     server,
   };
 }
 
-export async function updateServer(serverId: string, data: Partial<{ prefix: string; disabled_channels: Array<{ channel_id: string; disabled_commands: string[] }> }>) {
+export async function updateServer(serverId: string, data: Partial<{ prefix: string; disabled_channels: Array<{ channel_id: string; disabled_commands: string[] }>; werewolf_category: string | null }>) {
   const server = await getServerOrNull(serverId);
   if (!server) return null;
   if (data.prefix !== undefined) server.prefix = data.prefix;
   if (data.disabled_channels !== undefined) server.disabled_channels = data.disabled_channels;
+  if (data.werewolf_category !== undefined) server.werewolf_category = data.werewolf_category;
   await server.save();
   return server;
 }
